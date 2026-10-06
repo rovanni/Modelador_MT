@@ -2,7 +2,9 @@
 
 Simulador visual de Máquinas de Turing (determinísticas e não determinísticas) para a disciplina de Teoria da Computação. Segue o mesmo padrão do `Modelador_AP`.
 
-Abra `index.html` no navegador. Funciona **sem internet**: Tailwind e fontes são locais. O guia didático está em `ajuda.html`.
+**Online:** https://rovanni.github.io/Modelador_MT/
+
+**Local:** clone o repositório (`git clone https://github.com/rovanni/Modelador_MT.git`) e abra `index.html` no navegador. Funciona **sem internet**: Tailwind e fontes são locais. O guia didático está em `ajuda.html`.
 
 ## Estrutura
 
