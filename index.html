@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modelador de Máquinas de Turing (MT) Interativo</title>
+    <!-- Tudo local: funciona sem internet. Para regerar o Tailwind depois de mudar classes, veja README ("Uso offline"). -->
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="css/tailwind.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-slate-950 transition-colors duration-200">
+
+    <!-- Cabeçalho Principal -->
+    <header class="border-b border-slate-200 dark:border-slate-900 bg-white/85 dark:bg-slate-900/70 backdrop-blur-md sticky top-0 z-40 p-3.5 transition-colors duration-200 shadow-sm">
+        <div class="max-w-[1600px] mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
+
+            <!-- Logo & Título -->
+            <div class="flex items-center gap-3">
+                <div class="bg-indigo-500/10 p-2.5 rounded-2xl border border-indigo-500/30 text-indigo-600 dark:text-indigo-400 shadow-inner">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12h18M7 8v8M12 8v8M17 8v8"></path>
+                    </svg>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-base font-black tracking-wide text-indigo-600 dark:text-indigo-400 title-font uppercase">Modelador de Máquinas de Turing (MT)</h1>
+                        <span class="hidden 2xl:inline bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-[10px] font-bold px-2 py-0.5 rounded-full border border-indigo-500/20">7-Tupla Interativa</span>
+                    </div>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Fita, cabeçote, não determinismo e rastreamento passo a passo</p>
+                </div>
+            </div>
+
+            <!-- Controles do Topo -->
+            <div class="flex items-center gap-2 flex-wrap justify-center">
+                <div class="flex items-center gap-1.5 bg-slate-200/60 dark:bg-slate-900/90 p-1.5 rounded-xl border border-slate-300/50 dark:border-slate-800">
+                    <span class="text-xs text-slate-500 dark:text-slate-400 px-1 font-semibold shrink-0">Exemplos:</span>
+                    <button onclick="loadExample('an_bbb')" class="example-btn text-xs bg-white dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 hover:text-indigo-600 dark:hover:text-indigo-300 text-slate-700 dark:text-slate-200 px-2.5 py-1 rounded-lg transition shadow-sm font-semibold border border-slate-200 dark:border-slate-700/60" title="Aceita aⁿbⁿ (n ≥ 1) marcando um a e um b por rodada">aⁿbⁿ</button>
+                    <button onclick="loadExample('zero_one')" class="example-btn text-xs bg-white dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 hover:text-indigo-600 dark:hover:text-indigo-300 text-slate-700 dark:text-slate-200 px-2.5 py-1 rounded-lg transition shadow-sm font-semibold border border-slate-200 dark:border-slate-700/60" title="Máquina da aula: {0ⁿ1ⁿ} com q_a e q_r explícitos">0ⁿ1ⁿ (aula)</button>
+                    <button onclick="loadExample('palindrome')" class="example-btn text-xs bg-white dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 hover:text-indigo-600 dark:hover:text-indigo-300 text-slate-700 dark:text-slate-200 px-2.5 py-1 rounded-lg transition shadow-sm font-semibold border border-slate-200 dark:border-slate-700/60" title="Palíndromos sobre {a, b}">Palíndromo</button>
+                    <button onclick="loadExample('unary_plus')" class="example-btn text-xs bg-white dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 hover:text-indigo-600 dark:hover:text-indigo-300 text-slate-700 dark:text-slate-200 px-2.5 py-1 rounded-lg transition shadow-sm font-semibold border border-slate-200 dark:border-slate-700/60" title="Soma unária: 11+111 vira 11111">Soma unária</button>
+                    <button onclick="loadExample('copy')" class="example-btn text-xs bg-white dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 hover:text-indigo-600 dark:hover:text-indigo-300 text-slate-700 dark:text-slate-200 px-2.5 py-1 rounded-lg transition shadow-sm font-semibold border border-slate-200 dark:border-slate-700/60" title="Transdutor: w vira w#w">Cópia</button>
+                    <button onclick="loadExample('nd_guess')" class="example-btn text-xs bg-white dark:bg-slate-800 hover:bg-amber-50 dark:hover:bg-amber-950/40 hover:text-amber-600 dark:hover:text-amber-300 text-slate-700 dark:text-slate-200 px-2.5 py-1 rounded-lg transition shadow-sm font-semibold border border-slate-200 dark:border-slate-700/60" title="Máquina não determinística (vários ramos)">MTN</button>
+                    <button onclick="loadExample('loop')" class="example-btn text-xs bg-white dark:bg-slate-800 hover:bg-rose-50 dark:hover:bg-rose-950/40 hover:text-rose-600 dark:hover:text-rose-300 text-slate-700 dark:text-slate-200 px-2.5 py-1 rounded-lg transition shadow-sm font-semibold border border-slate-200 dark:border-slate-700/60" title="Máquina que nunca para">Loop ∞</button>
+                </div>
+
+                <div class="flex items-center gap-1.5 bg-slate-200/60 dark:bg-slate-900/90 p-1.5 rounded-xl border border-slate-300/50 dark:border-slate-800">
+                    <button onclick="exportToJSON()" class="text-xs bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-2.5 py-1 rounded-lg transition shadow-sm font-semibold border border-slate-200 dark:border-slate-700/60" title="Exportar modelo em JSON (Ctrl+S)">⭳ Exportar</button>
+                    <button onclick="document.getElementById('import-file-input').click()" class="text-xs bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-2.5 py-1 rounded-lg transition shadow-sm font-semibold border border-slate-200 dark:border-slate-700/60" title="Importar modelo em JSON">⭱ Importar</button>
+                    <input type="file" id="import-file-input" accept=".json,application/json" class="hidden" onchange="importFromJSON(event)">
+                </div>
+
+                <a href="ajuda.html" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30 text-xs px-3 py-2 rounded-xl transition font-bold flex items-center gap-1.5">
+                    <span>💡</span><span>Guia de Ajuda</span>
+                </a>
+                <button onclick="toggleTheme()" class="p-2 rounded-xl bg-slate-200/60 dark:bg-slate-900/90 hover:bg-slate-300 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300/50 dark:border-slate-800 transition" title="Alternar tema claro/escuro">🌓</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Área de Trabalho Principal (Duas Colunas) -->
+    <main class="max-w-[1600px] w-full mx-auto p-4 flex-grow grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch my-1">
+
+        <!-- ================= COLUNA ESQUERDA: DEFINIÇÃO FORMAL ================= -->
+        <section class="lg:col-span-5 flex flex-col gap-4">
+
+            <!-- 1. Alfabetos & Critério de Parada -->
+            <div class="bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-900 p-4 rounded-2xl shadow-sm">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-xs font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider code-font flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
+                        1. Alfabetos & Base (Σ, Γ, B)
+                    </h2>
+                    <span class="text-[11px] text-indigo-600 dark:text-indigo-400 font-mono font-semibold">MT = (Q, Σ, Γ, δ, q₀, B, F)</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                    <div>
+                        <label class="block text-slate-500 dark:text-slate-400 font-semibold mb-1">Entrada (Σ):</label>
+                        <input type="text" id="input-alphabet-field" value="a b" onchange="updateAlphabets()"
+                               class="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl px-3 py-2 text-xs outline-none text-slate-800 dark:text-slate-100 font-bold code-font"
+                               placeholder="Ex: a b ou 0 1">
+                    </div>
+                    <div>
+                        <label class="block text-slate-500 dark:text-slate-400 font-semibold mb-1">Fita (Γ ⊇ Σ):</label>
+                        <input type="text" id="tape-alphabet-field" value="a b X Y" onchange="updateAlphabets()"
+                               class="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl px-3 py-2 text-xs outline-none text-slate-800 dark:text-slate-100 font-bold code-font"
+                               placeholder="Ex: a b X Y #">
+                    </div>
+                </div>
+                <p class="mt-2 text-[10px] text-slate-400">
+                    Branco: <span class="code-font font-bold text-indigo-500">B</span> (B ∈ Γ, B ∉ Σ; também aceita <span class="code-font font-bold">_</span>) · Movimentos:
+                    <span class="code-font font-bold">R</span> direita, <span class="code-font font-bold">L</span> esquerda, <span class="code-font font-bold">S</span> fica.
+                </p>
+
+                <div class="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/60">
+                    <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">Critério de Aceitação:</label>
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <label class="flex items-center gap-1.5 p-2 rounded-xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 cursor-pointer hover:border-indigo-500 transition">
+                            <input type="radio" name="acceptanceMode" value="accept_state" checked onchange="changeAcceptanceMode(this.value)" class="text-indigo-600 focus:ring-0">
+                            <span class="font-medium text-[11px] leading-tight">Estado de Aceitação <span class="text-slate-400 block text-[9px]">para em q ∈ F</span></span>
+                        </label>
+                        <label class="flex items-center gap-1.5 p-2 rounded-xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 cursor-pointer hover:border-indigo-500 transition">
+                            <input type="radio" name="acceptanceMode" value="halt" onchange="changeAcceptanceMode(this.value)" class="text-indigo-600 focus:ring-0">
+                            <span class="font-medium text-[11px] leading-tight">Parada Natural <span class="text-slate-400 block text-[9px]">sem regra aplicável</span></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Tabela de Transições (δ) -->
+            <div class="bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-900 p-4 rounded-2xl flex-grow flex flex-col justify-between shadow-sm">
+                <div>
+                    <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-100 dark:border-slate-800">
+                        <div>
+                            <h2 class="text-xs font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider code-font flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
+                                2. Tabela de Transições (δ)
+                            </h2>
+                            <p class="text-[10px] text-slate-400">Regra: (q, a) ➔ (p, b, D)</p>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <button onclick="openNewTransitionModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs px-2.5 py-1.5 rounded-lg transition font-semibold flex items-center gap-1 shadow-sm"><span>+</span> Transição</button>
+                            <button onclick="handleAddStateClick()" class="bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 text-xs px-2.5 py-1.5 rounded-lg transition font-semibold">+ Estado</button>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between gap-2 mb-2 text-xs">
+                        <span class="text-slate-400 text-[11px]">Filtrar por estado:</span>
+                        <select id="state-table-filter" onchange="renderTransitionTable()" class="bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-2 py-1 text-xs outline-none text-slate-700 dark:text-slate-200 font-semibold">
+                            <option value="all">Todos os Estados</option>
+                        </select>
+                    </div>
+
+                    <div id="transition-table-scroll" class="relative overflow-x-auto max-h-[300px] overflow-y-auto pr-1 pb-2 border border-slate-100 dark:border-slate-800/60 rounded-xl">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead class="bg-slate-50 dark:bg-slate-950/80 sticky top-0 z-10">
+                                <tr class="text-slate-400 border-b border-slate-100 dark:border-slate-800 text-[11px]">
+                                    <th class="py-2 px-2.5 font-bold">Origem</th>
+                                    <th class="py-2 px-2 text-center font-bold">Lê (a)</th>
+                                    <th class="py-2 px-2 text-center font-bold">Escreve (b)</th>
+                                    <th class="py-2 px-2 text-center font-bold">Move (D)</th>
+                                    <th class="py-2 px-2.5 font-bold">Destino</th>
+                                    <th class="py-2 px-2 text-center font-bold">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transition-table-body" class="divide-y divide-slate-100 dark:divide-slate-800/40"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs text-slate-400">
+                    <div class="flex items-center gap-3">
+                        <span>Estados: <strong class="text-slate-700 dark:text-slate-200" id="state-count">0</strong></span>
+                        <span>Transições: <strong class="text-slate-700 dark:text-slate-200" id="transition-count">0</strong></span>
+                        <span>q₀: <strong class="text-indigo-600 dark:text-indigo-400" id="param-initial-state">—</strong></span>
+                        <span>F: <strong class="text-emerald-600 dark:text-emerald-400" id="param-accept-states">—</strong></span>
+                        <span>R: <strong class="text-rose-600 dark:text-rose-400" id="param-reject-states">—</strong></span>
+                    </div>
+                    <button onclick="clearMachine()" class="text-rose-500 hover:text-rose-400 transition text-[11px] font-medium">Reiniciar Do Zero</button>
+                </div>
+            </div>
+
+            <!-- 3. Validação & Classificação (MTD vs MTN) -->
+            <div class="bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-900 p-4 rounded-2xl shadow-sm">
+                <div class="flex items-center justify-between mb-2">
+                    <h2 class="text-xs font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider code-font flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                        3. Validação & Classificação
+                    </h2>
+                    <span id="analysis-class-badge" class="px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/30">Analisando...</span>
+                </div>
+                <div id="analysis-box" class="flex flex-col gap-1.5 max-h-[160px] overflow-y-auto pr-1 text-xs"></div>
+            </div>
+        </section>
+
+        <!-- ================= COLUNA DIREITA: DIAGRAMA & SIMULADOR ================= -->
+        <section class="lg:col-span-7 flex flex-col gap-4">
+
+            <!-- Painel do Canvas -->
+            <div class="bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-900 rounded-2xl flex flex-col overflow-hidden shadow-sm min-h-[380px] relative">
+
+                <div class="p-2.5 bg-slate-50 dark:bg-slate-950/80 border-b border-slate-200 dark:border-slate-900 flex flex-wrap items-center justify-between gap-2 z-10">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider code-font font-bold">Grafo da MT</span>
+                        <button id="btn-toggle-toolbar-size" onclick="toggleToolbarSize()" class="bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-[10px] px-2 py-0.5 rounded-md transition border border-slate-300/40 dark:border-slate-700 font-semibold" title="Alternar entre textos nos botões ou apenas ícones">
+                            <span id="compact-toggle-text">Modo Compacto</span>
+                        </button>
+                    </div>
+
+                    <div id="graph-toolbar-controls" class="flex items-center gap-1.5 flex-wrap text-xs">
+                        <button id="btn-draw-mode" onclick="toggleDrawMode()" class="bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-[11px] px-2.5 py-1.5 rounded-lg transition border border-slate-300/40 dark:border-slate-700 flex items-center gap-1.5 font-medium" title="Alterna entre mover nós e criar transições (ou use Shift+Arrastar)">
+                            <span class="w-2 h-2 rounded-full bg-slate-400" id="draw-mode-indicator"></span>
+                            <span class="btn-text">Mover Nós</span>
+                        </button>
+
+                        <div class="h-4 w-px bg-slate-300 dark:bg-slate-700 mx-1"></div>
+
+                        <button onclick="autoLayoutCircle()" class="bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-[11px] px-2 py-1.5 rounded-lg transition flex items-center gap-1" title="Organizar nós em círculo"><span>◯</span><span class="btn-text">Círculo</span></button>
+                        <button onclick="layoutLine()" class="bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-[11px] px-2 py-1.5 rounded-lg transition flex items-center gap-1" title="Organizar nós em linha, na ordem de criação"><span>⋯</span><span class="btn-text">Linha</span></button>
+                        <button onclick="layoutGrid()" class="bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-[11px] px-2 py-1.5 rounded-lg transition flex items-center gap-1" title="Organizar nós em grade"><span>▦</span><span class="btn-text">Grade</span></button>
+                        <button onclick="fitView()" class="bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-[11px] px-2 py-1.5 rounded-lg transition flex items-center gap-1" title="Centralizar e enquadrar a máquina (F)"><span>⌖</span><span class="btn-text">Centralizar</span></button>
+
+                        <div class="h-4 w-px bg-slate-300 dark:bg-slate-700 mx-1"></div>
+
+                        <button onclick="zoomBy(1 / 1.2)" class="bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-[11px] px-2 py-1.5 rounded-lg transition" title="Diminuir zoom (↓)">−</button>
+                        <button onclick="zoomBy(1.2)" class="bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-[11px] px-2 py-1.5 rounded-lg transition" title="Aumentar zoom (↑)">+</button>
+
+                        <div class="h-4 w-px bg-slate-300 dark:bg-slate-700 mx-1"></div>
+
+                        <button onclick="undo()" id="btn-undo" class="bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-[11px] px-2 py-1.5 rounded-lg transition disabled:opacity-30 disabled:cursor-not-allowed" title="Desfazer (Ctrl+Z)" disabled>↩</button>
+                        <button onclick="redo()" id="btn-redo" class="bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-[11px] px-2 py-1.5 rounded-lg transition disabled:opacity-30 disabled:cursor-not-allowed" title="Refazer (Ctrl+Y)" disabled>↪</button>
+
+                        <div class="h-4 w-px bg-slate-300 dark:bg-slate-700 mx-1"></div>
+
+                        <button onclick="exportToPNG()" class="bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 border border-indigo-500/30 text-[11px] px-2 py-1.5 rounded-lg transition font-semibold" title="Exportar diagrama em PNG (Ctrl+P)">PNG</button>
+                        <button onclick="exportToLaTeX()" class="bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 border border-indigo-500/30 text-[11px] px-2 py-1.5 rounded-lg transition font-semibold" title="Exportar código TikZ LaTeX (Ctrl+E)">LaTeX</button>
+                    </div>
+                </div>
+
+                <div id="canvas-wrapper" class="relative h-[430px] min-h-[360px] bg-slate-100/50 dark:bg-slate-950/40">
+                    <canvas id="graph-canvas" class="w-full h-full block absolute inset-0"></canvas>
+                    <div class="absolute bottom-2 left-3 pointer-events-none text-[10px] text-slate-400 dark:text-slate-500 bg-white/70 dark:bg-slate-900/70 backdrop-blur-sm px-2.5 py-1 rounded-lg border border-slate-200/50 dark:border-slate-800/50 flex items-center gap-2 flex-wrap">
+                        <span>💡 <strong>Duplo clique</strong>: cria estado / alterna aceitação</span>
+                        <span>•</span>
+                        <span><strong>Shift + Arrastar</strong>: conecta transição</span>
+                        <span>•</span>
+                        <span><strong>Botão direito</strong>: opções</span>
+                        <span>•</span>
+                        <span><strong>Roda</strong>: zoom</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Painel do Simulador -->
+            <div class="bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-900 p-4 rounded-2xl shadow-sm flex flex-col gap-3">
+
+                <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
+                    <div class="flex items-center gap-2">
+                        <button onclick="switchSimTab('single')" id="tab-btn-single" class="px-3 py-1.5 rounded-xl text-xs font-bold transition bg-indigo-600 text-white shadow-sm">Cadeia Única (Passo a Passo)</button>
+                        <button onclick="switchSimTab('batch')" id="tab-btn-batch" class="px-3 py-1.5 rounded-xl text-xs font-semibold transition text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200">Testar Lote (Múltiplas Palavras)</button>
+                    </div>
+                    <span class="text-[11px] text-slate-400">Motor de Turing Não-Determinístico</span>
+                </div>
+
+                <!-- ABA 1: PASSO A PASSO -->
+                <div id="tab-content-single" class="flex flex-col gap-4">
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <input type="text" id="input-string-field" value="aabb" onkeydown="if(event.key==='Enter') startSingleSimulation()"
+                               class="flex-grow bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl px-3.5 py-2 text-xs outline-none text-slate-800 dark:text-slate-100 font-bold code-font"
+                               placeholder="Digite a palavra de entrada w (ex: aabb)">
+                        <button onclick="startSingleSimulation()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs px-4 py-2 rounded-xl transition font-bold shadow-md shadow-indigo-600/10 flex items-center justify-center gap-1.5">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path></svg>
+                            <span>Iniciar Simulação</span>
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
+
+                        <!-- Fita, controles e ramos -->
+                        <div class="md:col-span-8 flex flex-col gap-3 min-w-0">
+
+                            <div>
+                                <div class="flex items-center justify-between text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                                    <span>Fita:</span>
+                                    <div class="flex items-center gap-2">
+                                        <span id="tape-head-info" class="text-indigo-600 dark:text-indigo-400 normal-case">—</span>
+                                        <div class="flex items-center gap-1">
+                                            <button onclick="shiftTapeWindow(-6)" class="px-1.5 rounded bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-[10px]" title="Ver células à esquerda">◀</button>
+                                            <button onclick="centerTapeWindow()" class="px-1.5 rounded bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-[10px]" title="Centralizar no cabeçote">◎</button>
+                                            <button onclick="shiftTapeWindow(6)" class="px-1.5 rounded bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-[10px]" title="Ver células à direita">▶</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="tape-viewport" class="relative overflow-x-auto p-2 bg-slate-100 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 min-h-[64px] select-none" title="Arraste para rolar a fita">
+                                    <div id="tape-cells" class="flex items-stretch gap-1 min-w-max"></div>
+                                </div>
+                                <div class="mt-1.5 text-[11px] code-font text-slate-600 dark:text-slate-300 break-all" title="Descrição instantânea: fita com o estado antes do símbolo lido">
+                                    <span class="text-slate-400 font-sans text-[10px] uppercase tracking-wider">Configuração:</span> <span id="cfg-line"></span>
+                                </div>
+                                <div class="mt-1 text-[10px] text-slate-400">
+                                    <span class="code-font font-bold text-indigo-500">B</span> branco ·
+                                    <span class="code-font font-bold text-rose-500">▮</span> cabeçote ·
+                                    <span class="code-font font-bold text-indigo-500">✗</span> célula escrita neste passo
+                                </div>
+                            </div>
+
+                            <!-- Controles de reprodução -->
+                            <div class="flex items-center justify-between gap-2 p-2 bg-slate-50 dark:bg-slate-950/60 rounded-xl border border-slate-200 dark:border-slate-800">
+                                <div class="flex items-center gap-1">
+                                    <button onclick="simStepFirst()" class="p-1.5 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs border border-slate-200 dark:border-slate-700/60" title="Voltar ao início">⏮</button>
+                                    <button onclick="simStepBack()" class="p-1.5 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs border border-slate-200 dark:border-slate-700/60" title="Passo anterior (←)">◀</button>
+                                    <button onclick="simTogglePlay()" id="btn-play-pause" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs flex items-center gap-1 shadow-sm" title="Reproduzir / Pausar (Espaço)">▶ Play</button>
+                                    <button onclick="simStepForward()" class="p-1.5 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs border border-slate-200 dark:border-slate-700/60" title="Próximo passo (→)">▶</button>
+                                    <button onclick="simStepLast()" class="p-1.5 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs border border-slate-200 dark:border-slate-700/60" title="Avançar até o final">⏭</button>
+                                </div>
+                                <div class="flex items-center gap-2 text-xs">
+                                    <span class="text-slate-400 text-[10px]">Velocidade:</span>
+                                    <input type="range" id="sim-speed-range" min="100" max="1500" step="100" value="900" class="w-16 sm:w-24 accent-indigo-600" oninput="restartPlayTimer()" title="Mais à direita = mais rápido">
+                                </div>
+                            </div>
+
+                            <!-- Status / Resultado -->
+                            <div id="sim-result-banner" class="p-3 rounded-xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3">
+                                <div class="flex items-center gap-2.5 min-w-0">
+                                    <span id="sim-status-icon" class="text-lg">⏳</span>
+                                    <div class="min-w-0">
+                                        <div id="sim-status-title" class="text-xs font-bold text-slate-700 dark:text-slate-200">Pronto para iniciar</div>
+                                        <div id="sim-status-desc" class="text-[11px] text-slate-400">Insira a palavra e clique em "Iniciar Simulação"</div>
+                                    </div>
+                                </div>
+                                <div id="sim-step-indicator" class="text-xs font-mono font-bold text-indigo-600 dark:text-indigo-400 shrink-0">Passo: 0 / 0</div>
+                            </div>
+
+                            <!-- Ramos (nondeterminismo) -->
+                            <div>
+                                <div class="flex items-center justify-between text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+                                    <span>Configurações Ativas (q, fita, cabeçote):</span>
+                                    <span id="branch-count-badge" class="text-[10px] text-indigo-600 dark:text-indigo-400 font-mono">0 ramos</span>
+                                </div>
+                                <div id="branch-list" class="flex flex-wrap gap-2 max-h-[140px] overflow-y-auto p-1"></div>
+                            </div>
+                        </div>
+
+                        <!-- Rastreamento (equivalente à Pilha Visual do AP) -->
+                        <div class="md:col-span-4 bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 p-3.5 rounded-2xl flex flex-col min-w-0">
+                            <div class="w-full flex items-center justify-between mb-2">
+                                <span class="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider code-font flex items-center gap-1"><span>📜</span> Rastreamento</span>
+                                <span id="trace-count-badge" class="bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-mono font-bold text-[10px] px-2 py-0.5 rounded-md border border-indigo-500/20">0 passos</span>
+                            </div>
+                            <div id="trace-op-badge" class="w-full text-center py-1 px-2 mb-2 rounded-lg text-[10px] font-bold code-font bg-slate-200 dark:bg-slate-900 text-slate-500 border border-slate-300/40 dark:border-slate-800">Configuração inicial</div>
+                            <div id="trace-list" class="relative flex flex-col gap-1 max-h-[300px] min-h-[160px] overflow-y-auto pr-1 text-[11px] code-font"></div>
+                            <div id="trace-empty" class="text-[11px] text-slate-400 leading-relaxed p-2.5">Clique em "Iniciar Simulação" ou ▶ Play. Clique numa linha para saltar até aquele passo.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ABA 2: LOTE -->
+                <div id="tab-content-batch" class="hidden flex flex-col gap-3">
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Insira várias palavras (uma por linha) para testar a máquina em massa:</p>
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
+                        <div class="md:col-span-5 flex flex-col gap-2">
+                            <textarea id="batch-input-textarea" rows="7"
+                                      class="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl p-3 text-xs outline-none text-slate-800 dark:text-slate-100 font-mono resize-none leading-relaxed"
+                                      placeholder="Exemplo:&#10;ab&#10;aabb&#10;aaabbb&#10;aab&#10;abb&#10;ba"></textarea>
+                            <button onclick="runBatchTests()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white text-xs py-2 rounded-xl transition font-bold shadow-sm">Testar Todas as Palavras</button>
+                        </div>
+                        <div class="md:col-span-7 border border-slate-100 dark:border-slate-800 rounded-xl overflow-hidden flex flex-col">
+                            <div class="bg-slate-50 dark:bg-slate-950/80 px-3 py-2 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
+                                <span class="font-bold text-slate-600 dark:text-slate-300">Resultados dos Testes</span>
+                                <div class="flex items-center gap-2 font-semibold">
+                                    <span id="batch-stats-accepted" class="text-emerald-600 dark:text-emerald-400">0 Aceitas</span><span>•</span>
+                                    <span id="batch-stats-rejected" class="text-rose-600 dark:text-rose-400">0 Rejeitadas</span><span>•</span>
+                                    <span id="batch-stats-timeout" class="text-amber-600 dark:text-amber-400">0 Sem parada</span>
+                                </div>
+                            </div>
+                            <div class="overflow-y-auto max-h-[170px] p-2 flex flex-col gap-1.5 text-xs" id="batch-results-list">
+                                <span class="text-slate-400 italic text-center py-4">Clique em "Testar Todas as Palavras" para exibir os resultados.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="border-t border-slate-200 dark:border-slate-900 bg-white/60 dark:bg-slate-900/40 backdrop-blur-md p-3 text-center text-xs text-slate-400">
+        <p>Modelador de Máquinas de Turing (MT) • Disciplina de <strong>Teoria da Computação</strong> • Prof. Luciano Rovanni</p>
+    </footer>
+
+    <!-- Modal: Estado -->
+    <div id="state-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm">
+        <div class="w-full max-w-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-4">
+            <h3 class="text-sm font-bold title-font mb-3">Editar Estado</h3>
+            <label class="block text-[11px] font-semibold text-slate-600 dark:text-slate-300 mb-1">Nome</label>
+            <input type="text" id="state-name-input" class="w-full p-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-xs code-font mb-3 focus:outline-none focus:border-indigo-500">
+            <div class="grid grid-cols-2 gap-2 mb-3">
+                <label class="flex items-center gap-2 text-[11px] font-semibold p-2 rounded-lg bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 cursor-pointer"><input type="checkbox" id="state-initial-input" class="accent-indigo-600"> q₀ inicial</label>
+                <label class="flex items-center gap-2 text-[11px] font-semibold p-2 rounded-lg bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 cursor-pointer"><input type="checkbox" id="state-accept-input" class="accent-emerald-600"> q_acc / F</label>
+                <label class="col-span-2 flex items-center gap-2 text-[11px] font-semibold p-2 rounded-lg bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 cursor-pointer"><input type="checkbox" id="state-reject-input" class="accent-rose-600"> q_rej (estado de rejeição: a máquina para e rejeita)</label>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="saveStateModal()" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold px-3 py-2 rounded-lg transition">Salvar</button>
+                <button onclick="deleteStateFromModal()" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 text-[11px] font-bold px-3 py-2 rounded-lg transition border border-rose-500/30">Excluir</button>
+                <button onclick="closeModal('state-modal')" class="bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-[11px] font-bold px-3 py-2 rounded-lg transition border border-slate-300 dark:border-slate-700">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Transição -->
+    <div id="transition-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm">
+        <div class="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-4">
+            <h3 class="text-sm font-bold title-font mb-1">Editar Regra de δ</h3>
+            <p id="transition-modal-sub" class="text-[11px] text-slate-500 dark:text-slate-400 mb-3 code-font">δ(q₀, a) = (q₁, b, R)</p>
+            <div class="grid grid-cols-3 gap-2 mb-3">
+                <div>
+                    <label class="block text-[11px] font-semibold text-slate-600 dark:text-slate-300 mb-1">Lê (Γ)</label>
+                    <input type="text" id="trans-read-input" class="w-full p-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-xs code-font focus:outline-none focus:border-indigo-500" placeholder="a">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-semibold text-slate-600 dark:text-slate-300 mb-1">Escreve</label>
+                    <input type="text" id="trans-write-input" class="w-full p-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-xs code-font focus:outline-none focus:border-indigo-500" placeholder="X">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-semibold text-slate-600 dark:text-slate-300 mb-1">Move</label>
+                    <select id="trans-move-input" class="w-full p-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-xs font-bold focus:outline-none focus:border-indigo-500">
+                        <option value="R">R →</option>
+                        <option value="L">L ←</option>
+                        <option value="S">S •</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mb-2 flex items-center gap-1.5 text-[10px] text-slate-400">
+                <span>Atalho:</span>
+                <button type="button" onclick="setModalBlank('trans-read-input')" class="bg-slate-200 dark:bg-slate-800 hover:bg-indigo-100 dark:hover:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 px-2 py-0.5 rounded font-bold">B lê branco</button>
+                <button type="button" onclick="setModalBlank('trans-write-input')" class="bg-slate-200 dark:bg-slate-800 hover:bg-indigo-100 dark:hover:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 px-2 py-0.5 rounded font-bold">B escreve branco</button>
+            </div>
+            <div class="grid grid-cols-2 gap-2 mb-3">
+                <div>
+                    <label class="block text-[11px] font-semibold text-slate-600 dark:text-slate-300 mb-1">De</label>
+                    <select id="trans-from-input" class="w-full p-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-xs font-medium focus:outline-none focus:border-indigo-500"></select>
+                </div>
+                <div>
+                    <label class="block text-[11px] font-semibold text-slate-600 dark:text-slate-300 mb-1">Para</label>
+                    <select id="trans-to-input" class="w-full p-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-xs font-medium focus:outline-none focus:border-indigo-500"></select>
+                </div>
+            </div>
+            <div class="text-[10px] text-slate-500 dark:text-slate-400 mb-3 bg-slate-100 dark:bg-slate-950/60 p-2 rounded-lg border border-slate-200 dark:border-slate-800 code-font" id="trans-preview">δ(?, ?) = (?, ?, ?)</div>
+            <div class="flex gap-2">
+                <button onclick="saveTransitionModal()" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold px-3 py-2 rounded-lg transition">Salvar</button>
+                <button onclick="deleteTransitionFromModal()" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 text-[11px] font-bold px-3 py-2 rounded-lg transition border border-rose-500/30">Excluir</button>
+                <button onclick="closeModal('transition-modal')" class="bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-[11px] font-bold px-3 py-2 rounded-lg transition border border-slate-300 dark:border-slate-700">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: LaTeX / TikZ -->
+    <div id="latex-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm">
+        <div class="w-full max-w-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-4">
+            <h3 class="text-sm font-bold title-font mb-1">Código LaTeX (TikZ)</h3>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400 mb-3 leading-relaxed">
+                Adicione <span class="code-font font-bold text-indigo-600 dark:text-indigo-400">\usetikzlibrary{automata,positioning,arrows.meta}</span> no preâmbulo do seu documento.
+            </p>
+            <textarea id="latex-code-textarea" readonly rows="16"
+                class="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl px-3 py-2 text-xs outline-none text-slate-800 dark:text-slate-100 code-font resize-none"></textarea>
+            <div class="flex gap-2 mt-3">
+                <button onclick="copyLatexCode()" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold px-3 py-2 rounded-lg transition">Copiar código</button>
+                <button onclick="downloadFullTeX()" class="bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 border border-indigo-500/30 text-[11px] font-bold px-3 py-2 rounded-lg transition" title="Baixa um .tex pronto para compilar (classe standalone)">Baixar .tex completo</button>
+                <button onclick="closeModal('latex-modal')" class="bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-[11px] font-bold px-3 py-2 rounded-lg transition border border-slate-300 dark:border-slate-700">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="context-menu" class="hidden fixed z-50 min-w-[170px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl p-1.5 flex flex-col gap-1 text-[11px] font-semibold"></div>
+    <div id="toast" class="hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-xl text-[11px] font-bold shadow-2xl border"></div>
+
+    <!-- Scripts da aplicação (ordem importa: modelo -> canvas -> painéis -> modais -> simulação -> exemplos -> exportação -> início) -->
+    <script src="js/model.js"></script>
+    <script src="js/canvas.js"></script>
+    <script src="js/panels.js"></script>
+    <script src="js/modals.js"></script>
+    <script src="js/simulation.js"></script>
+    <script src="js/examples.js"></script>
+    <script src="js/export.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

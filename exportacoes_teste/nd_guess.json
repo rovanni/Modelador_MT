@@ -1,0 +1,94 @@
+{
+  "tipo": "MAQUINA_TURING",
+  "versao": 1,
+  "entrada": "bba",
+  "modo_aceitacao": "accept_state",
+  "sigma": [
+    "a",
+    "b"
+  ],
+  "gamma": [
+    "a",
+    "b"
+  ],
+  "branco": "B",
+  "estados": [
+    {
+      "id": "s1",
+      "nome": "q0",
+      "x": 220,
+      "y": 210,
+      "inicial": true,
+      "aceitacao": false,
+      "rejeicao": false
+    },
+    {
+      "id": "s2",
+      "nome": "q1",
+      "x": 480,
+      "y": 110,
+      "inicial": false,
+      "aceitacao": false,
+      "rejeicao": false
+    },
+    {
+      "id": "s3",
+      "nome": "q2",
+      "x": 720,
+      "y": 110,
+      "inicial": false,
+      "aceitacao": true,
+      "rejeicao": false
+    }
+  ],
+  "transicoes": [
+    {
+      "id": "t4",
+      "de": "s1",
+      "para": "s1",
+      "le": "a",
+      "escreve": "a",
+      "move": "R"
+    },
+    {
+      "id": "t5",
+      "de": "s1",
+      "para": "s2",
+      "le": "a",
+      "escreve": "a",
+      "move": "R"
+    },
+    {
+      "id": "t6",
+      "de": "s1",
+      "para": "s1",
+      "le": "b",
+      "escreve": "b",
+      "move": "R"
+    },
+    {
+      "id": "t7",
+      "de": "s2",
+      "para": "s2",
+      "le": "a",
+      "escreve": "a",
+      "move": "R"
+    },
+    {
+      "id": "t8",
+      "de": "s2",
+      "para": "s2",
+      "le": "b",
+      "escreve": "b",
+      "move": "R"
+    },
+    {
+      "id": "t9",
+      "de": "s2",
+      "para": "s3",
+      "le": "B",
+      "escreve": "B",
+      "move": "S"
+    }
+  ]
+}

@@ -1,0 +1,203 @@
+{
+  "tipo": "MAQUINA_TURING",
+  "versao": 1,
+  "entrada": "0011",
+  "modo_aceitacao": "accept_state",
+  "sigma": [
+    "0",
+    "1"
+  ],
+  "gamma": [
+    "0",
+    "1",
+    "x",
+    "y"
+  ],
+  "branco": "B",
+  "estados": [
+    {
+      "id": "s1",
+      "nome": "q0",
+      "x": 140,
+      "y": 300,
+      "inicial": true,
+      "aceitacao": false,
+      "rejeicao": false
+    },
+    {
+      "id": "s2",
+      "nome": "q1",
+      "x": 400,
+      "y": 110,
+      "inicial": false,
+      "aceitacao": false,
+      "rejeicao": false
+    },
+    {
+      "id": "s3",
+      "nome": "q2",
+      "x": 620,
+      "y": 500,
+      "inicial": false,
+      "aceitacao": false,
+      "rejeicao": false
+    },
+    {
+      "id": "s4",
+      "nome": "q3",
+      "x": 760,
+      "y": 300,
+      "inicial": false,
+      "aceitacao": false,
+      "rejeicao": false
+    },
+    {
+      "id": "s5",
+      "nome": "qa",
+      "x": 1020,
+      "y": 300,
+      "inicial": false,
+      "aceitacao": true,
+      "rejeicao": false
+    },
+    {
+      "id": "s6",
+      "nome": "qr",
+      "x": 1020,
+      "y": 520,
+      "inicial": false,
+      "aceitacao": false,
+      "rejeicao": true
+    }
+  ],
+  "transicoes": [
+    {
+      "id": "t7",
+      "de": "s1",
+      "para": "s2",
+      "le": "0",
+      "escreve": "x",
+      "move": "R"
+    },
+    {
+      "id": "t8",
+      "de": "s1",
+      "para": "s4",
+      "le": "y",
+      "escreve": "y",
+      "move": "R"
+    },
+    {
+      "id": "t9",
+      "de": "s1",
+      "para": "s6",
+      "le": "1",
+      "escreve": "1",
+      "move": "S"
+    },
+    {
+      "id": "t10",
+      "de": "s1",
+      "para": "s6",
+      "le": "B",
+      "escreve": "B",
+      "move": "S"
+    },
+    {
+      "id": "t11",
+      "de": "s2",
+      "para": "s2",
+      "le": "0",
+      "escreve": "0",
+      "move": "R"
+    },
+    {
+      "id": "t12",
+      "de": "s2",
+      "para": "s2",
+      "le": "y",
+      "escreve": "y",
+      "move": "R"
+    },
+    {
+      "id": "t13",
+      "de": "s2",
+      "para": "s3",
+      "le": "1",
+      "escreve": "y",
+      "move": "L"
+    },
+    {
+      "id": "t14",
+      "de": "s2",
+      "para": "s6",
+      "le": "B",
+      "escreve": "B",
+      "move": "S"
+    },
+    {
+      "id": "t15",
+      "de": "s3",
+      "para": "s3",
+      "le": "0",
+      "escreve": "0",
+      "move": "L"
+    },
+    {
+      "id": "t16",
+      "de": "s3",
+      "para": "s3",
+      "le": "y",
+      "escreve": "y",
+      "move": "L"
+    },
+    {
+      "id": "t17",
+      "de": "s3",
+      "para": "s1",
+      "le": "x",
+      "escreve": "x",
+      "move": "R"
+    },
+    {
+      "id": "t18",
+      "de": "s4",
+      "para": "s4",
+      "le": "y",
+      "escreve": "y",
+      "move": "R"
+    },
+    {
+      "id": "t19",
+      "de": "s4",
+      "para": "s5",
+      "le": "B",
+      "escreve": "B",
+      "move": "S"
+    },
+    {
+      "id": "t20",
+      "de": "s4",
+      "para": "s6",
+      "le": "0",
+      "escreve": "0",
+      "move": "S"
+    },
+    {
+      "id": "t21",
+      "de": "s4",
+      "para": "s6",
+      "le": "1",
+      "escreve": "1",
+      "move": "S"
+    },
+    {
+      "id": "t22",
+      "de": "s4",
+      "para": "s6",
+      "le": "x",
+      "escreve": "x",
+      "move": "S"
+    }
+  ]
+}

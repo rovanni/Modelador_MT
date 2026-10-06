@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia Didático & Tutorial — Máquinas de Turing (MT)</title>
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="css/tailwind.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .title-font { font-family: 'Outfit', sans-serif; }
+        .code-font { font-family: 'Fira Code', monospace; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.3); border-radius: 9999px; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-slate-950 transition-colors duration-200">
+
+    <header class="border-b border-slate-200 dark:border-slate-900 bg-white/80 dark:bg-slate-900/60 backdrop-blur-md sticky top-0 z-40 p-4 transition-colors duration-200">
+        <div class="max-w-5xl mx-auto flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <a href="index.html" class="bg-indigo-500/10 hover:bg-indigo-500/20 p-2.5 rounded-xl border border-indigo-500/30 text-indigo-600 dark:text-indigo-400 transition" title="Voltar ao Modelador">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                </a>
+                <div>
+                    <h1 class="text-lg font-extrabold title-font tracking-wide text-indigo-600 dark:text-indigo-400">Guia Didático & Manual da MT</h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Teoria da Computação — Máquinas de Turing na Prática (Prof. Luciano Rovanni)</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <a href="index.html" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs px-4 py-2 rounded-xl transition shadow-md shadow-indigo-500/20 flex items-center gap-1.5">
+                    <span>Abrir Simulador</span><span>→</span>
+                </a>
+                <button onclick="toggleTheme()" class="p-2 rounded-xl bg-slate-200/60 dark:bg-slate-900 hover:bg-slate-300/60 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300/50 dark:border-slate-800 transition" title="Alternar tema">🌓</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl w-full mx-auto p-4 sm:p-6 flex-grow flex flex-col gap-8 my-2 leading-relaxed">
+
+        <!-- 1 -->
+        <section class="bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl shadow-sm">
+            <div class="flex items-center gap-3 mb-3">
+                <span class="text-2xl">🧠</span>
+                <h2 class="text-xl font-bold title-font">1. Por que precisamos de uma fita?</h2>
+            </div>
+            <p class="text-sm text-slate-600 dark:text-slate-300 mb-4">
+                O <strong>Autômato Finito</strong> lembra apenas pelo estado. O <strong>Autômato com Pilha</strong> ganha uma memória, mas só acessa o topo dela. Algumas linguagens exigem mais, como
+                <code class="font-mono font-bold">aⁿbⁿcⁿ</code> ou <code class="font-mono font-bold">ww</code>: é preciso voltar, comparar e reescrever.
+            </p>
+            <div class="bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-500/20 p-4 rounded-2xl mb-4 text-xs">
+                <strong class="text-indigo-600 dark:text-indigo-400 block mb-1 text-sm">A ideia de Turing</strong>
+                Uma <strong>fita infinita</strong> para os dois lados, dividida em células, e um <strong>cabeçote</strong> que, a cada passo, lê uma célula, escreve nela e se move uma posição.
+                Como a fita pode ser reescrita e percorrida em qualquer direção, a MT é o modelo mais geral de computação que conhecemos.
+            </div>
+            <p class="text-sm text-slate-600 dark:text-slate-300">
+                Mudança importante de perspectiva: aqui a entrada <strong>já está escrita na fita</strong>. A máquina não "consome" símbolos, ela os <strong>visita</strong>.
+            </p>
+        </section>
+
+        <!-- 2 -->
+        <section class="bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl shadow-sm">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="text-2xl">📐</span>
+                <h2 class="text-xl font-bold title-font">2. A Definição Formal (A 7-Tupla)</h2>
+            </div>
+            <div class="p-3.5 bg-slate-100 dark:bg-slate-950 rounded-2xl border border-slate-200 dark:border-slate-800 text-center font-mono font-bold text-sm text-indigo-600 dark:text-indigo-400 mb-5">
+                M = (Q, Σ, Γ, δ, q₀, B, F)
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800"><strong class="font-mono text-indigo-500">Q</strong> — conjunto finito de estados.</div>
+                <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800"><strong class="font-mono text-indigo-500">Σ</strong> — alfabeto de entrada (<em>não</em> contém o branco B: o simulador avisa se você tentar usá-lo).</div>
+                <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800"><strong class="font-mono text-indigo-500">Γ</strong> — alfabeto da fita, com Σ ⊆ Γ e B ∈ Γ. Guarda marcas auxiliares como X e Y.</div>
+                <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800"><strong class="font-mono text-indigo-500">B</strong> — símbolo branco (B ∈ Γ, B ∉ Σ). Na digitação, <span class="font-mono">_</span> também vale.</div>
+                <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800"><strong class="font-mono text-indigo-500">δ</strong> — função de transição parcial: Q × Γ → Q × Γ × {L, R, S}.</div>
+                <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800"><strong class="font-mono text-indigo-500">q₀, F</strong> — estado inicial e conjunto de estados de aceitação.</div>
+            </div>
+        </section>
+
+        <!-- 3 -->
+        <section class="bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl shadow-sm">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="text-2xl">⚙️</span>
+                <h2 class="text-xl font-bold title-font">3. Como Funcionam as Transições (δ)</h2>
+            </div>
+            <p class="text-sm text-slate-600 dark:text-slate-300 mb-4">
+                Cada regra tem a forma <code class="font-mono font-bold">δ(q, a) = (p, b, D)</code> e é lida assim:
+                <em>"no estado q lendo a, vá para p, escreva b e mova o cabeçote para D"</em>.
+                No diagrama, o rótulo da seta aparece como <code class="font-mono font-bold">a → b,D</code>.
+            </p>
+            <div class="grid grid-cols-3 gap-3 text-xs mb-4">
+                <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 text-center"><strong class="font-mono text-lg text-indigo-500">R</strong><br>direita</div>
+                <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 text-center"><strong class="font-mono text-lg text-indigo-500">L</strong><br>esquerda</div>
+                <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 text-center"><strong class="font-mono text-lg text-indigo-500">S</strong><br>fica no lugar</div>
+            </div>
+            <div class="p-4 bg-slate-100 dark:bg-slate-950 rounded-2xl border border-slate-200 dark:border-slate-800 text-xs font-mono mb-4">
+                Exemplo (aⁿbⁿ):<br>
+                δ(q₀, a) = (q₁, X, R) &nbsp;→ marca o primeiro <b>a</b> com X e vai procurar um <b>b</b><br>
+                δ(q₁, b) = (q₂, Y, L) &nbsp;→ marca o <b>b</b> com Y e volta
+            </div>
+            <div class="p-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl text-xs text-amber-800 dark:text-amber-300">
+                <strong>Técnica central — marcar e voltar:</strong> a MT troca símbolos já tratados por marcas (X, Y) para saber "onde parou". É assim que ela conta sem pilha.
+            </div>
+        </section>
+
+        <!-- 4 -->
+        <section class="bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl shadow-sm">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="text-2xl">🛑</span>
+                <h2 class="text-xl font-bold title-font">4. Parada e Aceitação</h2>
+            </div>
+            <p class="text-sm text-slate-600 dark:text-slate-300 mb-4">
+                Diferente dos autômatos anteriores, a MT pode <strong>nunca parar</strong>. Há três desfechos possíveis:
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs mb-4">
+                <div class="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-800 dark:text-emerald-300"><strong>Aceita</strong><br>Para em estado de aceitação.</div>
+                <div class="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-800 dark:text-rose-300"><strong>Rejeita</strong><br>Para sem aceitar, por não haver regra aplicável.</div>
+                <div class="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-300"><strong>Não para</strong><br>Entra em laço infinito. O simulador interrompe após 250 passos.</div>
+            </div>
+            <p class="text-sm text-slate-600 dark:text-slate-300 mb-3">O campo <em>Modo de aceitação</em> escolhe a convenção:</p>
+            <ul class="text-xs text-slate-600 dark:text-slate-300 list-disc pl-5 space-y-1 mb-4">
+                <li><strong>Por estado de aceitação:</strong> a máquina aceita ao chegar em um estado de F. Sem regra aplicável em outro estado, rejeita.</li>
+                <li><strong>Por parada natural:</strong> qualquer parada (sem regra aplicável) conta como aceitação.</li>
+            </ul>
+            <div class="p-4 bg-rose-500/10 border border-rose-500/20 rounded-2xl text-xs text-rose-800 dark:text-rose-300 mb-4">
+                <strong>Estado de rejeição (q<sub>r</sub>):</strong> como na aula, você pode marcar um estado como de <em>rejeição</em> (botão direito → "Alternar rejeição", ou no editor do estado). Ele aparece com anel tracejado vermelho: ao chegar nele a máquina para e rejeita. Sem um q<sub>r</sub>, a rejeição acontece por falta de regra aplicável. Veja o exemplo <strong>0ⁿ1ⁿ (aula)</strong>, com q<sub>a</sub> e q<sub>r</sub> explícitos.
+            </div>
+            <div class="p-4 bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-500/20 rounded-2xl text-xs">
+                <strong class="text-indigo-600 dark:text-indigo-400">Por que isso importa:</strong> como a MT pode não parar, o problema da parada é indecidível. Teste o exemplo <strong>Loop ∞</strong> e observe: "não parou em 250 passos" <em>não</em> prova que nunca vai parar.
+            </div>
+        </section>
+
+        <!-- 5 -->
+        <section class="bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl shadow-sm">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="text-2xl">🌿</span>
+                <h2 class="text-xl font-bold title-font">5. Determinismo e Ramais (MTN)</h2>
+            </div>
+            <p class="text-sm text-slate-600 dark:text-slate-300 mb-4">
+                Se existir mais de uma regra para o mesmo par (estado, símbolo), a máquina é <strong>não determinística (MTN)</strong>. O selo no painel de análise muda de <span class="font-mono font-bold text-emerald-600">MTD</span> para <span class="font-mono font-bold text-amber-600">MTN</span>.
+                A cada escolha, o simulador cria um <strong>ramo</strong> de computação. A MTN aceita se <strong>algum</strong> ramo aceitar.
+            </p>
+            <div class="p-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl text-xs text-amber-800 dark:text-amber-300">
+                <strong>Resultado fundamental:</strong> MTN e MTD reconhecem exatamente as mesmas linguagens. A MTN pode ser mais conveniente de projetar, mas não é mais poderosa. Abra o exemplo <strong>MTN</strong> e clique nos ramos em <em>Configurações Ativas</em> para ver cada fita separadamente.
+            </div>
+        </section>
+
+        <!-- 6 -->
+        <section class="bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl shadow-sm">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="text-2xl">📚</span>
+                <h2 class="text-xl font-bold title-font">6. Exemplos Prontos</h2>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800"><strong class="text-indigo-500 font-mono">aⁿbⁿ</strong> — marca um <b>a</b> e um <b>b</b> por rodada (entrada padrão: aabb).</div>
+                <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800"><strong class="text-indigo-500 font-mono">0ⁿ1ⁿ (aula)</strong> — a máquina do slide: marca um 0 com x e um 1 com y por rodada, com <b>q<sub>a</sub></b> e <b>q<sub>r</sub></b> explícitos (entrada padrão: 0011).</div>
+                <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800"><strong class="text-indigo-500 font-mono">Palíndromo</strong> — compara a primeira e a última letra, apaga ambas e repete.</div>
+                <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800"><strong class="text-indigo-500 font-mono">Soma unária</strong> — transforma 11+111 em 11111, apagando o "+".</div>
+                <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800"><strong class="text-indigo-500 font-mono">Cópia</strong> — transdutor: a fita passa de <b>w</b> para <b>w#w</b>, mostrando que a MT também calcula funções.</div>
+                <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800"><strong class="text-indigo-500 font-mono">MTN</strong> — "adivinha" um <b>a</b> na entrada e aceita se existir ao menos um (ramos que apostam errado morrem).</div>
+                <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800"><strong class="text-indigo-500 font-mono">Loop ∞</strong> — vai e volta para sempre, ilustrando uma computação que não para.</div>
+            </div>
+        </section>
+
+        <!-- 7 -->
+        <section class="bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl shadow-sm">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="text-2xl">🖱️</span>
+                <h2 class="text-xl font-bold title-font">7. Guia Rápido de Interação</h2>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs mb-4">
+                <div class="flex items-center gap-2 p-2.5 bg-slate-50 dark:bg-slate-950/60 rounded-xl border border-slate-200 dark:border-slate-800"><span class="font-bold text-indigo-500 font-mono">Duplo clique no vazio:</span><span>cria um estado.</span></div>
+                <div class="flex items-center gap-2 p-2.5 bg-slate-50 dark:bg-slate-950/60 rounded-xl border border-slate-200 dark:border-slate-800"><span class="font-bold text-indigo-500 font-mono">Duplo clique no estado:</span><span>alterna estado de aceitação.</span></div>
+                <div class="flex items-center gap-2 p-2.5 bg-slate-50 dark:bg-slate-950/60 rounded-xl border border-slate-200 dark:border-slate-800"><span class="font-bold text-indigo-500 font-mono">Arrastar um estado:</span><span>move o estado (Ctrl+Z desfaz).</span></div>
+                <div class="flex items-center gap-2 p-2.5 bg-slate-50 dark:bg-slate-950/60 rounded-xl border border-slate-200 dark:border-slate-800"><span class="font-bold text-indigo-500 font-mono">Arrastar o fundo:</span><span>move a câmera.</span></div>
+                <div class="flex items-center gap-2 p-2.5 bg-slate-50 dark:bg-slate-950/60 rounded-xl border border-slate-200 dark:border-slate-800"><span class="font-bold text-indigo-500 font-mono">Shift + arrastar entre estados:</span><span>cria uma regra δ (ou use o botão "Criando Transições").</span></div>
+                <div class="flex items-center gap-2 p-2.5 bg-slate-50 dark:bg-slate-950/60 rounded-xl border border-slate-200 dark:border-slate-800"><span class="font-bold text-indigo-500 font-mono">Clique na seta:</span><span>edita a regra.</span></div>
+                <div class="flex items-center gap-2 p-2.5 bg-slate-50 dark:bg-slate-950/60 rounded-xl border border-slate-200 dark:border-slate-800"><span class="font-bold text-indigo-500 font-mono">Botão direito:</span><span>menu do estado, da seta ou do fundo (inclui laço e duplicar regra).</span></div>
+                <div class="flex items-center gap-2 p-2.5 bg-slate-50 dark:bg-slate-950/60 rounded-xl border border-slate-200 dark:border-slate-800"><span class="font-bold text-indigo-500 font-mono">Roda do mouse:</span><span>zoom.</span></div>
+            </div>
+            <h3 class="text-sm font-bold title-font mb-2">Organizando o diagrama e acompanhando a execução</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs mb-4">
+                <div class="flex items-center gap-2 p-2.5 bg-slate-50 dark:bg-slate-950/60 rounded-xl border border-slate-200 dark:border-slate-800"><span class="font-bold text-indigo-500 font-mono">Círculo / Linha / Grade:</span><span>organizam os estados automaticamente.</span></div>
+                <div class="flex items-center gap-2 p-2.5 bg-slate-50 dark:bg-slate-950/60 rounded-xl border border-slate-200 dark:border-slate-800"><span class="font-bold text-indigo-500 font-mono">Centralizar:</span><span>enquadra a máquina na tela.</span></div>
+                <div class="flex items-center gap-2 p-2.5 bg-slate-50 dark:bg-slate-950/60 rounded-xl border border-slate-200 dark:border-slate-800"><span class="font-bold text-indigo-500 font-mono">▶ Play / ◀ ▶ / ⏮ ⏭:</span><span>reproduz, volta e avança passos da computação.</span></div>
+                <div class="flex items-center gap-2 p-2.5 bg-slate-50 dark:bg-slate-950/60 rounded-xl border border-slate-200 dark:border-slate-800"><span class="font-bold text-indigo-500 font-mono">Clique numa linha do Rastreamento:</span><span>salta até aquele passo.</span></div>
+                <div class="flex items-center gap-2 p-2.5 bg-slate-50 dark:bg-slate-950/60 rounded-xl border border-slate-200 dark:border-slate-800"><span class="font-bold text-indigo-500 font-mono">Configuração (⊢):</span><span>cada passo mostra a descrição instantânea, com o estado antes do símbolo lido (ex.: <span class="font-mono">X X q₁ y 1</span>).</span></div>
+                <div class="flex items-center gap-2 p-2.5 bg-slate-50 dark:bg-slate-950/60 rounded-xl border border-slate-200 dark:border-slate-800"><span class="font-bold text-indigo-500 font-mono">Linha da tabela em destaque:</span><span>a regra aplicada no passo atual fica marcada na tabela de δ.</span></div>
+                <div class="flex items-center gap-2 p-2.5 bg-slate-50 dark:bg-slate-950/60 rounded-xl border border-slate-200 dark:border-slate-800"><span class="font-bold text-indigo-500 font-mono">Arrastar a fita:</span><span>role a fita com o mouse; ela acompanha o cabeçote sozinha.</span></div>
+                <div class="flex items-center gap-2 p-2.5 bg-slate-50 dark:bg-slate-950/60 rounded-xl border border-slate-200 dark:border-slate-800"><span class="font-bold text-indigo-500 font-mono">Salvamento automático:</span><span>ao reabrir a página, a última máquina volta como você deixou.</span></div>
+            </div>
+            <h3 class="text-sm font-bold title-font mb-2">Atalhos de teclado</h3>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono mb-2">
+                <div class="p-2 rounded-lg bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800"><b>Espaço</b> play/pausa</div>
+                <div class="p-2 rounded-lg bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800"><b>→</b> próximo passo</div>
+                <div class="p-2 rounded-lg bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800"><b>←</b> passo anterior</div>
+                <div class="p-2 rounded-lg bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800"><b>↑ ↓</b> zoom</div>
+                <div class="p-2 rounded-lg bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800"><b>R</b> reiniciar fita</div>
+                <div class="p-2 rounded-lg bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800"><b>F</b> enquadrar</div>
+                <div class="p-2 rounded-lg bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800"><b>Ctrl+Z / Y</b> desfazer/refazer</div>
+                <div class="p-2 rounded-lg bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800"><b>Ctrl+S / E / P</b> JSON / LaTeX / PNG</div>
+            </div>
+            <div class="p-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl text-xs text-amber-800 dark:text-amber-300">
+                <strong>Exportações:</strong> o branco é sempre <span class="font-mono">B</span>. o PNG sai sempre com fundo branco e a máquina inteira enquadrada. O botão LaTeX também baixa um <code class="font-mono">.tex</code> completo e compilável (classe standalone). O TikZ agrupa as regras de um mesmo par de estados numa única seta e desenha laços com <code class="font-mono">loop above</code>.
+            </div>
+        </section>
+
+        <!-- 8 -->
+        <section class="bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl shadow-sm">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="text-2xl">🎓</span>
+                <h2 class="text-xl font-bold title-font">8. Sugestões de Atividades</h2>
+            </div>
+            <ol class="text-sm text-slate-600 dark:text-slate-300 list-decimal pl-5 space-y-2">
+                <li>Use o Play e o botão ◀ para executar o exemplo aⁿbⁿ passo a passo com <code class="font-mono">aabb</code> e anote, a cada rodada, como a fita fica (<code class="font-mono">XaYb</code>, depois <code class="font-mono">XXYY</code>).</li>
+                <li>Teste <code class="font-mono">abbb</code> e <code class="font-mono">aabbb</code>. Em que estado e com qual símbolo a máquina trava?</li>
+                <li>Construa do zero uma MT que aceite <code class="font-mono">aⁿbⁿcⁿ</code>, linguagem que nenhum AP reconhece.</li>
+                <li>Altere o exemplo da soma unária para calcular o dobro de um número unário.</li>
+                <li>No exemplo MTN, descreva por que não existe ramo que aceite a entrada <code class="font-mono">bbb</code>.</li>
+                <li>Exporte o diagrama em LaTeX e compile-o no seu relatório.</li>
+            </ol>
+        </section>
+
+    </main>
+
+    <footer class="border-t border-slate-200 dark:border-slate-900 bg-white/60 dark:bg-slate-900/40 backdrop-blur-md p-4 text-center text-xs text-slate-400">
+        <p>Modelador de Máquinas de Turing (MT) • Disciplina de <strong>Teoria da Computação</strong> • Prof. Luciano Rovanni</p>
+    </footer>
+
+    <script>
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            try { localStorage.setItem('mt_theme', isDark ? 'dark' : 'light'); } catch (e) {}
+        }
+        try {
+            if (localStorage.getItem('mt_theme') === 'light') document.documentElement.classList.remove('dark');
+        } catch (e) {}
+    </script>
+</body>
+</html>

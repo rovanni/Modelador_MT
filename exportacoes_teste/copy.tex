@@ -1,0 +1,42 @@
+% Preâmbulo sugerido:
+% \usepackage[utf8]{inputenc}  \usepackage[T1]{fontenc}  \usepackage{tikz}
+% \usetikzlibrary{automata,positioning,arrows.meta}
+
+% Sigma = { a, b }
+% Gamma = { a, b, X, Y, # }  (branco = B)
+\begin{tikzpicture}[shorten >=1pt, node distance=2.4cm, on grid, auto, >=stealth, initial text={}]
+  % Estados
+  \node[state, initial] (s1) at (1.10, -4.00) {$q_{0}$};
+  \node[state] (s2) at (3.30, -5.60) {$q_{4}$};
+  \node[state] (s3) at (5.60, -2.60) {$q_{2}$};
+  \node[state] (s4) at (8.60, -0.70) {$q_{3}$};
+  \node[state] (s5) at (8.60, -5.20) {$q_{5}$};
+  \node[state] (s6) at (12.00, -2.60) {$q_{7}$};
+  \node[state, accepting] (s7) at (14.60, -2.60) {$q_{8}$};
+
+  % Regras de delta: le -> escreve, movimento (regras do mesmo par de estados dividem uma seta)
+  \path[->]
+    (s1) edge[loop above] node[align=center] {$a \mapsto a,\,R$ \\ $b \mapsto b,\,R$} (s1)
+    (s1) edge node[align=center] {$B \mapsto \#,\,L$} (s2)
+    (s2) edge[loop above] node[align=center] {$a \mapsto a,\,L$ \\ $b \mapsto b,\,L$ \\ $X \mapsto X,\,L$ \\ $Y \mapsto Y,\,L$ \\ $\# \mapsto \#,\,L$} (s2)
+    (s2) edge node[align=center] {$B \mapsto B,\,R$} (s3)
+    (s3) edge node[align=center] {$a \mapsto X,\,R$} (s4)
+    (s3) edge node[align=center] {$b \mapsto Y,\,R$} (s5)
+    (s3) edge[loop above] node[align=center] {$X \mapsto X,\,R$ \\ $Y \mapsto Y,\,R$} (s3)
+    (s3) edge node[align=center] {$\# \mapsto \#,\,L$} (s6)
+    (s4) edge[loop above] node[align=center] {$a \mapsto a,\,R$ \\ $b \mapsto b,\,R$ \\ $X \mapsto X,\,R$ \\ $Y \mapsto Y,\,R$ \\ $\# \mapsto \#,\,R$} (s4)
+    (s4) edge node[align=center] {$B \mapsto a,\,L$} (s2)
+    (s5) edge[loop above] node[align=center] {$a \mapsto a,\,R$ \\ $b \mapsto b,\,R$ \\ $X \mapsto X,\,R$ \\ $Y \mapsto Y,\,R$ \\ $\# \mapsto \#,\,R$} (s5)
+    (s5) edge node[align=center] {$B \mapsto b,\,L$} (s2)
+    (s6) edge[loop above] node[align=center] {$a \mapsto a,\,L$ \\ $b \mapsto b,\,L$ \\ $X \mapsto a,\,L$ \\ $Y \mapsto b,\,L$} (s6)
+    (s6) edge node[align=center] {$\# \mapsto B,\,R$ \\ $B \mapsto B,\,R$} (s7);
+\end{tikzpicture}
+
+% Fita do ramo 0 no passo 4 (cabeçote em negrito), posições -3..5
+\[
+\begin{array}{|c|c|c|c|c|c|c|c|c|}
+\hline
+ B & B & B & \mathbf{a} & b & \# & B & B & B \\
+\hline
+\end{array}
+\]

@@ -1,0 +1,35 @@
+% Preâmbulo sugerido:
+% \usepackage[utf8]{inputenc}  \usepackage[T1]{fontenc}  \usepackage{tikz}
+% \usetikzlibrary{automata,positioning,arrows.meta}
+
+% Sigma = { a, b }
+% Gamma = { a, b, X, Y }  (branco = B)
+\begin{tikzpicture}[shorten >=1pt, node distance=2.4cm, on grid, auto, >=stealth, initial text={}]
+  % Estados
+  \node[state, initial] (s1) at (1.40, -2.10) {$q_{0}$};
+  \node[state] (s2) at (3.40, -1.10) {$q_{1}$};
+  \node[state] (s3) at (5.60, -1.10) {$q_{2}$};
+  \node[state] (s4) at (7.60, -2.10) {$q_{3}$};
+  \node[state, accepting] (s5) at (9.00, -3.30) {$q_{4}$};
+
+  % Regras de delta: le -> escreve, movimento (regras do mesmo par de estados dividem uma seta)
+  \path[->]
+    (s1) edge node[align=center] {$a \mapsto X,\,R$} (s2)
+    (s1) edge[loop above] node[align=center] {$X \mapsto X,\,R$} (s1)
+    (s1) edge node[align=center] {$Y \mapsto Y,\,R$} (s4)
+    (s2) edge[loop above] node[align=center] {$a \mapsto a,\,R$ \\ $Y \mapsto Y,\,R$} (s2)
+    (s2) edge node[align=center] {$b \mapsto Y,\,L$} (s3)
+    (s3) edge[loop above] node[align=center] {$a \mapsto a,\,L$ \\ $b \mapsto b,\,L$ \\ $Y \mapsto Y,\,L$} (s3)
+    (s3) edge node[align=center] {$X \mapsto X,\,R$} (s1)
+    (s4) edge[loop above] node[align=center] {$X \mapsto X,\,R$ \\ $Y \mapsto Y,\,R$} (s4)
+    (s4) edge node[align=center] {$B \mapsto B,\,S$} (s5);
+\end{tikzpicture}
+
+% Fita do ramo 0 no passo 4 (cabeçote em negrito), posições -3..6
+\[
+\begin{array}{|c|c|c|c|c|c|c|c|c|c|}
+\hline
+ B & B & B & \mathbf{X} & a & Y & b & B & B & B \\
+\hline
+\end{array}
+\]

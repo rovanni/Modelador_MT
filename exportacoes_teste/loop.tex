@@ -1,0 +1,25 @@
+% Preâmbulo sugerido:
+% \usepackage[utf8]{inputenc}  \usepackage[T1]{fontenc}  \usepackage{tikz}
+% \usetikzlibrary{automata,positioning,arrows.meta}
+
+% Sigma = { a }
+% Gamma = { a }  (branco = B)
+\begin{tikzpicture}[shorten >=1pt, node distance=2.4cm, on grid, auto, >=stealth, initial text={}]
+  % Estados
+  \node[state, initial] (s1) at (2.60, -2.10) {$q_{0}$};
+  \node[state] (s2) at (5.20, -2.10) {$q_{1}$};
+
+  % Regras de delta: le -> escreve, movimento (regras do mesmo par de estados dividem uma seta)
+  \path[->]
+    (s1) edge[bend left=20] node[align=center] {$a \mapsto a,\,R$ \\ $B \mapsto B,\,R$} (s2)
+    (s2) edge[bend left=20] node[align=center] {$a \mapsto a,\,L$ \\ $B \mapsto B,\,L$} (s1);
+\end{tikzpicture}
+
+% Fita do ramo 0 no passo 4 (cabeçote em negrito), posições -3..3
+\[
+\begin{array}{|c|c|c|c|c|c|c|}
+\hline
+ B & B & B & \mathbf{a} & B & B & B \\
+\hline
+\end{array}
+\]

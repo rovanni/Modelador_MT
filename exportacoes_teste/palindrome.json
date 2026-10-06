@@ -1,0 +1,276 @@
+{
+  "tipo": "MAQUINA_TURING",
+  "versao": 1,
+  "entrada": "abba",
+  "modo_aceitacao": "accept_state",
+  "sigma": [
+    "a",
+    "b"
+  ],
+  "gamma": [
+    "a",
+    "b",
+    "X",
+    "Y"
+  ],
+  "branco": "B",
+  "estados": [
+    {
+      "id": "s1",
+      "nome": "q0",
+      "x": 130,
+      "y": 220,
+      "inicial": true,
+      "aceitacao": false,
+      "rejeicao": false
+    },
+    {
+      "id": "s2",
+      "nome": "q1",
+      "x": 330,
+      "y": 110,
+      "inicial": false,
+      "aceitacao": false,
+      "rejeicao": false
+    },
+    {
+      "id": "s3",
+      "nome": "q2",
+      "x": 540,
+      "y": 110,
+      "inicial": false,
+      "aceitacao": false,
+      "rejeicao": false
+    },
+    {
+      "id": "s4",
+      "nome": "q3",
+      "x": 330,
+      "y": 330,
+      "inicial": false,
+      "aceitacao": false,
+      "rejeicao": false
+    },
+    {
+      "id": "s5",
+      "nome": "q4",
+      "x": 540,
+      "y": 330,
+      "inicial": false,
+      "aceitacao": false,
+      "rejeicao": false
+    },
+    {
+      "id": "s6",
+      "nome": "q5",
+      "x": 740,
+      "y": 220,
+      "inicial": false,
+      "aceitacao": false,
+      "rejeicao": false
+    },
+    {
+      "id": "s7",
+      "nome": "q6",
+      "x": 920,
+      "y": 220,
+      "inicial": false,
+      "aceitacao": true,
+      "rejeicao": false
+    }
+  ],
+  "transicoes": [
+    {
+      "id": "t8",
+      "de": "s1",
+      "para": "s2",
+      "le": "a",
+      "escreve": "X",
+      "move": "R"
+    },
+    {
+      "id": "t9",
+      "de": "s1",
+      "para": "s3",
+      "le": "b",
+      "escreve": "Y",
+      "move": "R"
+    },
+    {
+      "id": "t10",
+      "de": "s1",
+      "para": "s1",
+      "le": "X",
+      "escreve": "X",
+      "move": "R"
+    },
+    {
+      "id": "t11",
+      "de": "s1",
+      "para": "s1",
+      "le": "Y",
+      "escreve": "Y",
+      "move": "R"
+    },
+    {
+      "id": "t12",
+      "de": "s1",
+      "para": "s7",
+      "le": "B",
+      "escreve": "B",
+      "move": "S"
+    },
+    {
+      "id": "t13",
+      "de": "s2",
+      "para": "s2",
+      "le": "a",
+      "escreve": "a",
+      "move": "R"
+    },
+    {
+      "id": "t14",
+      "de": "s2",
+      "para": "s2",
+      "le": "b",
+      "escreve": "b",
+      "move": "R"
+    },
+    {
+      "id": "t15",
+      "de": "s2",
+      "para": "s2",
+      "le": "X",
+      "escreve": "X",
+      "move": "R"
+    },
+    {
+      "id": "t16",
+      "de": "s2",
+      "para": "s2",
+      "le": "Y",
+      "escreve": "Y",
+      "move": "R"
+    },
+    {
+      "id": "t17",
+      "de": "s2",
+      "para": "s4",
+      "le": "B",
+      "escreve": "B",
+      "move": "L"
+    },
+    {
+      "id": "t18",
+      "de": "s3",
+      "para": "s3",
+      "le": "a",
+      "escreve": "a",
+      "move": "R"
+    },
+    {
+      "id": "t19",
+      "de": "s3",
+      "para": "s3",
+      "le": "b",
+      "escreve": "b",
+      "move": "R"
+    },
+    {
+      "id": "t20",
+      "de": "s3",
+      "para": "s3",
+      "le": "X",
+      "escreve": "X",
+      "move": "R"
+    },
+    {
+      "id": "t21",
+      "de": "s3",
+      "para": "s3",
+      "le": "Y",
+      "escreve": "Y",
+      "move": "R"
+    },
+    {
+      "id": "t22",
+      "de": "s3",
+      "para": "s5",
+      "le": "B",
+      "escreve": "B",
+      "move": "L"
+    },
+    {
+      "id": "t23",
+      "de": "s4",
+      "para": "s6",
+      "le": "a",
+      "escreve": "B",
+      "move": "L"
+    },
+    {
+      "id": "t24",
+      "de": "s4",
+      "para": "s6",
+      "le": "X",
+      "escreve": "X",
+      "move": "L"
+    },
+    {
+      "id": "t25",
+      "de": "s5",
+      "para": "s6",
+      "le": "b",
+      "escreve": "B",
+      "move": "L"
+    },
+    {
+      "id": "t26",
+      "de": "s5",
+      "para": "s6",
+      "le": "Y",
+      "escreve": "Y",
+      "move": "L"
+    },
+    {
+      "id": "t27",
+      "de": "s6",
+      "para": "s6",
+      "le": "a",
+      "escreve": "a",
+      "move": "L"
+    },
+    {
+      "id": "t28",
+      "de": "s6",
+      "para": "s6",
+      "le": "b",
+      "escreve": "b",
+      "move": "L"
+    },
+    {
+      "id": "t29",
+      "de": "s6",
+      "para": "s1",
+      "le": "X",
+      "escreve": "X",
+      "move": "R"
+    },
+    {
+      "id": "t30",
+      "de": "s6",
+      "para": "s1",
+      "le": "Y",
+      "escreve": "Y",
+      "move": "R"
+    },
+    {
+      "id": "t31",
+      "de": "s6",
+      "para": "s1",
+      "le": "B",
+      "escreve": "B",
+      "move": "R"
+    }
+  ]
+}
